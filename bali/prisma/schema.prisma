@@ -1,0 +1,161 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserTier {
+  FREE
+  STARTER
+  PRO
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  EXPIRED
+}
+
+enum CampaignStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  COMPLETED
+}
+
+enum ContentType {
+  AD_COPY
+  SOCIAL_POST
+  EMAIL
+}
+
+enum RecommendationStatus {
+  PENDING
+  APPLIED
+  DISMISSED
+}
+
+enum RecommendationType {
+  BUDGET_OPTIMIZATION
+  AUDIENCE_TARGETING
+  CREATIVE_SUGGESTION
+}
+
+model User {
+  id                   String                @id @default(cuid())
+  email                String                @unique
+  passwordHash         String
+  fullName             String?
+  companyName          String?
+  tier                 UserTier              @default(FREE)
+  subscriptionStatus   SubscriptionStatus    @default(ACTIVE)
+  createdAt            DateTime              @default(now())
+  lastLogin            DateTime?
+  campaigns            Campaign[]
+  contentGenerations   ContentGeneration[]
+  platformIntegrations PlatformIntegration[]
+  reportGenerations    ReportGeneration[]
+}
+
+model Campaign {
+  id                String             @id @default(cuid())
+  userId            String
+  user              User               @relation(fields: [userId], references: [id])
+  platform          String
+  name              String
+  status            CampaignStatus     @default(DRAFT)
+  type              String?
+  budget            Float?
+  startDate         DateTime?
+  endDate           DateTime?
+  totalSpend        Float              @default(0)
+  createdAt         DateTime           @default(now())
+  lastModified      DateTime           @default(now()) @updatedAt
+  rules             CampaignRule[]
+  metrics           CampaignMetric[]
+  recommendations   AiRecommendation[]
+  reportGenerations ReportGeneration[]
+}
+
+model CampaignRule {
+  id         String   @id @default(cuid())
+  campaignId String
+  campaign   Campaign @relation(fields: [campaignId], references: [id])
+  ruleType   String
+  condition  Json
+  action     Json
+  status     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+}
+
+model ContentGeneration {
+  id               String      @id @default(cuid())
+  userId           String
+  user             User        @relation(fields: [userId], references: [id])
+  contentType      ContentType
+  industry         String?
+  inputPreferences Json?
+  generatedContent String?
+  isDraft          Boolean     @default(true)
+  createdAt        DateTime    @default(now())
+}
+
+model CampaignMetric {
+  id             String   @id @default(cuid())
+  campaignId     String
+  campaign       Campaign @relation(fields: [campaignId], references: [id])
+  date           DateTime
+  impressions    Int      @default(0)
+  clicks         Int      @default(0)
+  conversions    Int      @default(0)
+  totalCost      Float    @default(0)
+  ctr            Float? // Click-through rate
+  conversionRate Float?
+  roi            Float? // Return on investment
+}
+
+model AiRecommendation {
+  id                 String               @id @default(cuid())
+  campaignId         String
+  campaign           Campaign             @relation(fields: [campaignId], references: [id])
+  recommendationType RecommendationType
+  description        String?
+  suggestedAction    Json?
+  confidenceScore    Float?
+  status             RecommendationStatus @default(PENDING)
+  createdAt          DateTime             @default(now())
+}
+
+model PlatformIntegration {
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id])
+  platformName String
+  accessToken  String?
+  refreshToken String?
+  tokenExpiry  DateTime?
+  isActive     Boolean   @default(true)
+  lastSynced   DateTime?
+}
+
+model ReportGeneration {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  campaignId       String
+  campaign         Campaign @relation(fields: [campaignId], references: [id])
+  reportType       String
+  generatedPdfPath String?
+  startDate        DateTime
+  endDate          DateTime
+  createdAt        DateTime @default(now())
+}
