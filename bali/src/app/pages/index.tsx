@@ -8,6 +8,7 @@ import { Mail, MessageSquare, Send } from "lucide-react";
 import { Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
 import { Check } from "lucide-react";
 import { BarChart, Brain, Rocket, Settings, Target } from "lucide-react";
+import Link from "next/link";
 
 const features = [
   {
@@ -123,10 +124,10 @@ const Hero = () => {
 
             <div className="hidden md:flex items-center space-x-4">
               <button className="px-4 py-2 text-blue-600 hover:text-blue-700">
-                Login
+                <Link href="/sign-in">Login</Link>
               </button>
               <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                Sign Up
+              <Link href="/sign-up">Sign Up</Link>
               </button>
             </div>
 
