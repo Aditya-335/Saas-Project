@@ -110,6 +110,9 @@ const Hero = () => {
               <a href="#pricing" className="text-gray-600 hover:text-blue-600">
                 Pricing
               </a>
+              <a href="/dashboard" className="text-gray-600 hover:text-blue-600">
+                Dashboard
+              </a>
               <a href="#about" className="text-gray-600 hover:text-blue-600">
                 About
               </a>
@@ -145,6 +148,9 @@ const Hero = () => {
               </a>
               <a href="#pricing" className="block px-3 py-2 text-gray-600">
                 Pricing
+              </a>
+              <a href="/dashboard" className="block px-3 py-2 text-gray-600">
+                Dashboard
               </a>
               <a href="#about" className="block px-3 py-2 text-gray-600">
                 About
