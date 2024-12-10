@@ -111,7 +111,7 @@ const Hero = () => {
               <a href="#pricing" className="text-gray-600 hover:text-blue-600">
                 Pricing
               </a>
-              <a href="/dashboard" className="text-gray-600 hover:text-blue-600">
+              <a href="/pages/dashboard" className="text-gray-600 hover:text-blue-600">
                 Dashboard
               </a>
               <a href="#about" className="text-gray-600 hover:text-blue-600">
