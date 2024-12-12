@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import UserAccountnav from "@/components/UserAccountSignOut";
+import UserAccountnav from "../components/UserAccountSignOut";
 import { authOptions } from "@/lib/auth";
 import { Link } from "lucide-react";
 import { getServerSession } from "next-auth"
